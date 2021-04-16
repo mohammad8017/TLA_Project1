@@ -1,5 +1,7 @@
 from NFA import NFA
 from DFA import DFA
+import graphviz
+from PySimpleAutomata import automata_IO
 
 if __name__ == "__main__":
     allStates = input("Enter states of Finite Automata: ").split(',')
@@ -17,27 +19,20 @@ if __name__ == "__main__":
         if not tmp in Rules:
             Rules.append(tmp)
 
-    #Example:
-    # allStates = ['q0','q1','q2','q3']
-    # alphabet = ['a','b']
-    # initialState = 'q0'
-    # finalStates = ['q0','q3']
-    # Rules = [['q0', 'q1', 'a'], ['q1', 'q2', 'b'], ['q1', 'q3', ' ']]
-    # for i in allStates:
-    #     tmp = [i, i, " "]
-    #     if not tmp in Rules:
-    #         Rules.append(tmp)    
+     
 
     nfaDiagram = NFA(allStates, alphabet, initialState, finalStates, Rules)
+
+    nfaDiagram.showSchematicNFA()
     
-    checkStr = input("Enter string to check accepted by NFA or not(replace landa with space): ")
-    print(nfaDiagram.isAcceptByNFA(checkStr)) 
+    #checkStr = input("Enter string to check accepted by NFA or not(replace landa with space): ")
+    # print(nfaDiagram.isAcceptByNFA(checkStr)) 
 
 
-    tempDfA = nfaDiagram.createEquivalentDFA()
-    hold = DFA()
-    hold = tempDfA
-    hold.printInfo()
+    # tempDfA = nfaDiagram.createEquivalentDFA()
+    # hold = DFA()
+    # hold = tempDfA
+    # hold.printInfo()
 
 
 # q0,q2,a

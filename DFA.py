@@ -1,3 +1,7 @@
+from PySimpleAutomata import automata_IO
+
+
+
 class DFA():
     def __init__(self, allStates = None, alphabet = None, initialState = None, finalStates = None, Rules = None):
         self.allStates = allStates

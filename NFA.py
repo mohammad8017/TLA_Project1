@@ -1,4 +1,6 @@
 from DFA import DFA
+import graphviz
+from PySimpleAutomata import automata_IO
 
 
 class NFA():
@@ -17,6 +19,97 @@ class NFA():
 		print(self.finalStates)
 		print(self.Rules)  
 
+
+	def showSchematicNFA(self):
+		holdRules = []
+		for rule in self.Rules:
+			tmp = [rule[0], rule[2], rule[1]]
+			holdRules.append(tmp)
+
+		alphabetSet = set()
+		for i in self.alphabet:
+			alphabetSet.add(i)
+
+		statesSet = set()
+		for i in self.allStates:
+			statesSet.add(i)
+
+		initialStateSet = set()
+		for i in self.initialState:
+			initialStateSet.add(i)
+
+		finalStateSet = set()
+		for i in self.finalStates:
+			finalStateSet.add(i)
+
+		transitionsDict = {}
+		for i in holdRules:
+			transitionsDict.setdefault((i[0],i[1]), set()).add(i[2])			
+
+
+		# NFA_example = {
+		# 	"alphabet": self.alphabet, 
+		# 	# [
+				
+		# 	# 	# "a",
+		# 	# 	# "b",
+		# 	# 	# "c"
+		# 	# ],
+		# 	"states": self.allStates,
+		# 	# [
+				
+		# 	# 	# "a0",
+		# 	# 	# "t0",
+		# 	# 	# "t1",
+		# 	# 	# "t2",
+		# 	# 	# "t3",
+		# 	# 	# "t4"
+		# 	# ],
+		# 	"initial_states": [self.initialState],
+		# 	# [
+				
+		# 	# 	# "t0",
+		# 	# 	# "a0"
+		# 	# ],
+		# 	"accepting_states": self.finalStates,
+		# 	# [
+		# 	# 	# "t0",
+		# 	# 	# "t4",
+		# 	# 	# "a0"
+		# 	# ],
+		# 	"transitions": 	holdRules,
+		# 	# [
+		# 	# 	# ["t0","b","t1"],
+		# 	# 	# ["t0","a","t2"],
+		# 	# 	# ["t1","c","t3"],
+		# 	# 	# ["t1","c","t2"],
+		# 	# 	# ["t1","b","t4"],
+		# 	# 	# ["t2","b","t1"],
+		# 	# 	# ["t2","a","t2"],
+		# 	# 	# ["t2","a","t4"],
+		# 	# 	# ["t3","c","t0"],
+		# 	# 	# ["t3","b","t0"],
+		# 	# 	# ["t3","b","t3"],
+		# 	# 	# ["t3","a","t4"],
+		# 	# 	# ["t3","a","t1"],
+		# 	# 	# ["t4","a","t4"],
+		# 	# 	# ["t4","b","t0"],
+		# 	# 	# ["t4","c","t0"],
+		# 	# 	# ["a0","a","t1"]
+		# 	# ]
+		# }
+
+		nfa = {
+        'alphabet': alphabetSet,
+        'states': statesSet,
+        'initial_states': initialStateSet,
+        'accepting_states': finalStateSet,
+        'transitions': transitionsDict
+    	}
+		
+		automata_IO.nfa_to_dot(nfa, "NFA_Diagram")
+		#automata_IO.nfa_to_dot(NFA_example, "NFA Diagram")
+		print()
 
 	def findRegExp(self):
 		# regex = ""
