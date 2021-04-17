@@ -1,9 +1,12 @@
-from DFA import DFA
-import graphviz
+from DFA import DFAClass
+from graphviz import Graph, render
+from automata.fa.nfa import NFA
 from PySimpleAutomata import automata_IO
+import networkx as nx
+import matplotlib.pyplot as plt
 
 
-class NFA():
+class NFAClass():
 	def __init__(self, allStates = None, alphabet = None, initialState = None, finalStates = None, Rules = None):
 		self.allStates = allStates
 		self.alphabet = alphabet
@@ -22,95 +25,31 @@ class NFA():
 
 	def showSchematicNFA(self):
 		holdRules = []
+		dicttest = {}
 		for rule in self.Rules:
-			tmp = [rule[0], rule[2], rule[1]]
+			tmp = (rule[0], rule[1])
+			temp = (rule[0], rule[1])
+			temp2 = rule[2]
+			dicttest.update({temp:temp2})
 			holdRules.append(tmp)
 
-		alphabetSet = set()
-		for i in self.alphabet:
-			alphabetSet.add(i)
-
-		statesSet = set()
-		for i in self.allStates:
-			statesSet.add(i)
-
-		initialStateSet = set()
-		for i in self.initialState:
-			initialStateSet.add(i)
-
-		finalStateSet = set()
-		for i in self.finalStates:
-			finalStateSet.add(i)
-
-		transitionsDict = {}
-		for i in holdRules:
-			transitionsDict.setdefault((i[0],i[1]), set()).add(i[2])			
-
-
-		# NFA_example = {
-		# 	"alphabet": self.alphabet, 
-		# 	# [
-				
-		# 	# 	# "a",
-		# 	# 	# "b",
-		# 	# 	# "c"
-		# 	# ],
-		# 	"states": self.allStates,
-		# 	# [
-				
-		# 	# 	# "a0",
-		# 	# 	# "t0",
-		# 	# 	# "t1",
-		# 	# 	# "t2",
-		# 	# 	# "t3",
-		# 	# 	# "t4"
-		# 	# ],
-		# 	"initial_states": [self.initialState],
-		# 	# [
-				
-		# 	# 	# "t0",
-		# 	# 	# "a0"
-		# 	# ],
-		# 	"accepting_states": self.finalStates,
-		# 	# [
-		# 	# 	# "t0",
-		# 	# 	# "t4",
-		# 	# 	# "a0"
-		# 	# ],
-		# 	"transitions": 	holdRules,
-		# 	# [
-		# 	# 	# ["t0","b","t1"],
-		# 	# 	# ["t0","a","t2"],
-		# 	# 	# ["t1","c","t3"],
-		# 	# 	# ["t1","c","t2"],
-		# 	# 	# ["t1","b","t4"],
-		# 	# 	# ["t2","b","t1"],
-		# 	# 	# ["t2","a","t2"],
-		# 	# 	# ["t2","a","t4"],
-		# 	# 	# ["t3","c","t0"],
-		# 	# 	# ["t3","b","t0"],
-		# 	# 	# ["t3","b","t3"],
-		# 	# 	# ["t3","a","t4"],
-		# 	# 	# ["t3","a","t1"],
-		# 	# 	# ["t4","a","t4"],
-		# 	# 	# ["t4","b","t0"],
-		# 	# 	# ["t4","c","t0"],
-		# 	# 	# ["a0","a","t1"]
-		# 	# ]
-		# }
-
-		nfa = {
-        'alphabet': alphabetSet,
-        'states': statesSet,
-        'initial_states': initialStateSet,
-        'accepting_states': finalStateSet,
-        'transitions': transitionsDict
-    	}
+		G = nx.DiGraph()
+		G.add_edges_from(holdRules)
 		
-		automata_IO.nfa_to_dot(nfa, "NFA_Diagram")
-		#automata_IO.nfa_to_dot(NFA_example, "NFA Diagram")
-		print()
+		labels = nx.get_edge_attributes(G, 'weight')
+		labels = dicttest
+		pos = nx.spring_layout(G)
+		nx.draw_networkx_nodes(G, pos, node_size=500)
+		nx.draw_networkx_edges(G, pos, edgelist=G.edges(), edge_color='black')
+		nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
+		nx.draw_networkx_labels(G, pos)
+		plt.title("NFA Diagram")
+		plt.show()	
 
+
+		
+
+		
 	def findRegExp(self):
 		# regex = ""
 		# for state in self.allStates:
@@ -240,5 +179,5 @@ class NFA():
 
 		
 
-		return DFA(allStatesDFA, alphabetDFA, initialStateDFA, finalStatesDFA, RulesDFA)            
+		return DFAClass(allStatesDFA, alphabetDFA, initialStateDFA, finalStatesDFA, RulesDFA)            
 

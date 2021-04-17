@@ -1,7 +1,10 @@
-from NFA import NFA
-from DFA import DFA
-import graphviz
+from NFA import NFAClass
+from DFA import DFAClass
+from graphviz import Graph
+from automata.fa.nfa import NFA
 from PySimpleAutomata import automata_IO
+import networkx as nx
+import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     allStates = input("Enter states of Finite Automata: ").split(',')
@@ -21,10 +24,11 @@ if __name__ == "__main__":
 
      
 
-    nfaDiagram = NFA(allStates, alphabet, initialState, finalStates, Rules)
+    nfaDiagram = NFAClass(allStates, alphabet, initialState, finalStates, Rules)
 
     nfaDiagram.showSchematicNFA()
     
+    # nfa = NFA()
     #checkStr = input("Enter string to check accepted by NFA or not(replace landa with space): ")
     # print(nfaDiagram.isAcceptByNFA(checkStr)) 
 
@@ -33,6 +37,11 @@ if __name__ == "__main__":
     # hold = DFA()
     # hold = tempDfA
     # hold.printInfo()
+
+
+
+
+    
 
 
 # q0,q2,a
