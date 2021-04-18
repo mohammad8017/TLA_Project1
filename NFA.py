@@ -26,6 +26,7 @@ class NFAClass():
 	def showSchematicNFA(self):
 		holdRules = []
 		dicttest = {}
+		#dicttest.update({('initial',self.initialState):'initial'})
 		for rule in self.Rules:
 			tmp = (rule[0], rule[1])
 			temp = (rule[0], rule[1])
@@ -35,14 +36,27 @@ class NFAClass():
 
 		G = nx.DiGraph()
 		G.add_edges_from(holdRules)
+		#G.add_edges_from({('a','a'):'2'})
+		colors = []
+		for node in G:
+			if node in self.initialState:
+				colors.append('yellow')
+			elif node in self.finalStates:
+				colors.append('red')
+			else:
+				colors.append('gray')	
 		
 		labels = nx.get_edge_attributes(G, 'weight')
 		labels = dicttest
 		pos = nx.spring_layout(G)
-		nx.draw_networkx_nodes(G, pos, node_size=500)
+		nx.draw_networkx_nodes(G, pos, node_size=500, node_color=colors)
 		nx.draw_networkx_edges(G, pos, edgelist=G.edges(), edge_color='black')
 		nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
 		nx.draw_networkx_labels(G, pos)
+
+		# nx.draw(G, node_color=colors, with_labels=True)
+		# nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
+		# nx.draw_networkx_labels(G, pos)
 		plt.title("NFA Diagram")
 		plt.show()	
 
