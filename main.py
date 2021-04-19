@@ -17,26 +17,27 @@ if __name__ == "__main__":
     print("Enter rules: ")
     for i in range(numOfRules):
         Rules.append(input().split(','))
-    for i in allStates:
-        tmp = [i, i, " "]
-        if not tmp in Rules:
-            Rules.append(tmp)
+    # for i in allStates:
+    #     tmp = [i, i, " "]
+    #     if not tmp in Rules:
+    #         Rules.append(tmp)
 
      
 
     nfaDiagram = NFAClass(allStates, alphabet, initialState, finalStates, Rules)
 
-    nfaDiagram.showSchematicNFA()
+    #nfaDiagram.showSchematicNFA()
+    
     
     # nfa = NFA()
-    #checkStr = input("Enter string to check accepted by NFA or not(replace landa with space): ")
-    # print(nfaDiagram.isAcceptByNFA(checkStr)) 
+    checkStr = input("Enter string to check accepted by NFA or not(replace landa with space): ")
+    print(nfaDiagram.isAcceptByNFA(checkStr)) 
 
 
-    # tempDfA = nfaDiagram.createEquivalentDFA()
-    # hold = DFA()
-    # hold = tempDfA
-    # hold.printInfo()
+    tempDfA = nfaDiagram.createEquivalentDFA()
+    hold = DFAClass()
+    hold = tempDfA
+    hold.printInfo()
 
 
 

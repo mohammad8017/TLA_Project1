@@ -1,6 +1,6 @@
 from DFA import DFAClass
 from graphviz import Graph, render
-from automata.fa.nfa import NFA
+#from automata.fa.nfa import NFA
 from PySimpleAutomata import automata_IO
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -30,12 +30,19 @@ class NFAClass():
 		for rule in self.Rules:
 			tmp = (rule[0], rule[1])
 			temp = (rule[0], rule[1])
-			temp2 = rule[2]
+			if rule[2] != ' ':
+				temp2 = rule[2]
+			else:
+				temp2 = '$'	
 			dicttest.update({temp:temp2})
 			holdRules.append(tmp)
 
-		G = nx.DiGraph()
+		G = nx.MultiDiGraph()
+		#temp = {('q0','q1'):'a', ('q0','q2'):'b'}
 		G.add_edges_from(holdRules)
+		G.add_edge('q0','q0')
+		#G.add_edge({('q0','q1'):'a'})
+		#G.add_edges_from(temp)
 		#G.add_edges_from({('a','a'):'2'})
 		colors = []
 		for node in G:
@@ -97,33 +104,62 @@ class NFAClass():
 		print()   
 
 	def isAcceptByNFA(self, inputString):
-		accept = True      
-		currentState = self.initialState
+		holdRules = {}
+		for rule in self.Rules:
+			tmp = (rule[0], rule[2])
+			temp2 = rule[1]
+			holdRules.update({tmp:temp2})
 
-		# insert landa between all chars of string
-		# inputString = " ".join(inputString)
-		# inputString = list(inputString)
-		# inputString.insert(0,' ')
-		# inputString.append(' ')
+		holdAlphabet = set()
+		for alphabet in self.alphabet:
+			holdAlphabet.add(alphabet)
 
+		holdStates = set()
+		for state in self.allStates:
+			holdStates.add(state)	
 
-		for i in range(len(inputString)):
-			currentStateList = [item for item in self.Rules if (item[0] == currentState and item[2] == inputString[i]) or (item[0] == currentState and item[2] == ' ')] #all rules from current state
-			check = False
-			for item in currentStateList:
-				if item[2] == inputString[i]:
-					currentState = item[1]
-					check = True
-					break
-			accept = check
-			if not accept and inputString[i] != " ":
-				return accept   
+		holdInitial = set()
+		for state in self.initialState:
+			if type(self.initialState) == str:
+				holdInitial.add(self.initialState)
+				break
+			else:
+				holdInitial.add(state)
 
-		if accept and (currentState in self.finalStates):
+		holdFinal = set()
+		for state in self.finalStates:
+			holdFinal.add(state)		
+
+		nfa = {
+			"alphabet":holdAlphabet,
+
+			"states": holdStates,
+
+			"initial_states": holdInitial,
+
+			"accepting_states": holdFinal,
+
+			"transitions": holdRules
+		}
+			   
+		current_level = set()
+		current_level = current_level.union(nfa['initial_states'])
+		next_level = set()
+		for action in inputString:
+			for state in current_level:
+				if (state,action) in nfa['transitions']:
+					tempCurrent = nfa['transitions'][state, action]
+					next_level.add(tempCurrent)
+					
+			if len(next_level) < 1:
+				return False
+			current_level = next_level
+			next_level = set()
+
+		if current_level.intersection(nfa['accepting_states']):
 			return True
 		else:
-			return False    
-
+			return False
 
 
 	def createEquivalentDFA(self):     #ide az in site:      https://www.geeksforgeeks.org/conversion-from-nfa-to-dfa/ 
@@ -171,7 +207,8 @@ class NFAClass():
 						
 
 			for j in tempList2:
-				allStatesDFA.append(j)
+				if not j in allStatesDFA:
+					allStatesDFA.append(j)
 			if len(tempList2) == 0 and i == len(allStatesDFA):
 				over = True    
 			if i < len(allStatesDFA)-1:
