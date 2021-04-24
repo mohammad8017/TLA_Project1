@@ -4,6 +4,9 @@ from graphviz import Graph, render
 from PySimpleAutomata import automata_IO
 import networkx as nx
 import matplotlib.pyplot as plt
+import pyutil as Util
+from test import Regex
+#from my_app.analytic.utils import arbitrary_item
 
 
 class NFAClass():
@@ -109,6 +112,7 @@ class NFAClass():
 			tmp = (rule[0], rule[2])
 			temp2 = rule[1]
 			holdRules.update({tmp:temp2})
+			
 
 		holdAlphabet = set()
 		for alphabet in self.alphabet:
@@ -232,3 +236,89 @@ class NFAClass():
 
 		return DFAClass(allStatesDFA, alphabetDFA, initialStateDFA, finalStatesDFA, RulesDFA)            
 
+
+
+
+
+
+
+	def RegExp(self):
+		#"""Convert to regular expression and return as a string. See Sipser for an explanation of this algorithm."""
+
+		# create artificial initial and final states
+		# initial = object()
+		# final = object()
+		# states = {'q0','q1'} #| set(self.states())
+
+		# # 2d matrix of expressions connecting each pair of states
+		# expr = {}
+		# for x in states:
+		# 	for y in states:
+		# 		expr[x,y] = None
+		# for x in self.allStates:
+		# 	if x in self.initialState:
+		# 		expr[initial,x] = ''
+		# 	if x in self.finalStates:
+		# 		expr[x,final] = ''
+		# 	expr[x,x] = ''
+		# for x in self.allStates:
+		# 	for c in self.alphabet:
+		# 		tmp = [[transition[0],transition[2]] for transition in self.Rules if transition[0]==x and transition[2]==c]
+		# 		for y in tmp:
+		# 			if expr[x,y]:
+		# 				expr[x,y] += '+' + str(c)
+		# 			else:
+		# 				expr[x,y] = str(c)
+
+		# # eliminate states one at a time
+		# for s in self.allStates:
+		# 	states.remove(s)
+		# 	for x in states:
+		# 		for y in states:
+		# 			if expr[x,s] is not None and expr[s,y] is not None:
+		# 				xsy = []
+		# 				if expr[x,s]:
+		# 					xsy += self._parenthesize(expr[x,s])
+		# 				if expr[s,s]:
+		# 					xsy += self._parenthesize(expr[s,s],True) + ['*']
+		# 				if expr[s,y]:
+		# 					xsy += self._parenthesize(expr[s,y])
+		# 				if expr[x,y] is not None:
+		# 					xsy += ['+',expr[x,y] or '()']
+		# 				expr[x,y] = ''.join(xsy)
+		# return expr[initial,final]
+
+		holdRules = {}
+		for rule in self.Rules:
+			tmp = (rule[0], rule[2])
+			temp2 = rule[1]
+			holdRules.update({tmp:temp2})
+
+		tempObj = Regex(self.allStates,self.allStates,self.initialState,self.finalStates,holdRules)
+		print(tempObj.genRegex())
+
+	def _parenthesize(self,expr,starring=False):
+		# """Return list of strings with or without parens for use in RegExp.
+		# This is only for the purpose of simplifying the expressions returned,
+		# by omitting parentheses or other expression features when unnecessary;
+		# it would always be correct simply to return ['(',expr,')'].
+		# """
+		if len(expr) == 1 or (not starring and '+' not in expr):
+			return [expr]
+		elif starring and expr.endswith('+()'):
+			return ['(',expr[:-3],')']  # +epsilon redundant when starring
+		else:
+			return ['(',expr,')']
+
+	# def states(self):
+	# 	visited = set()
+	# 	unvisited = set(self.initialState)
+	# 	while unvisited:
+	# 		#state = arbitrary_item(unvisited)
+	# 		state = next(iter(unvisited))
+	# 		yield state
+	# 		unvisited.remove(state)
+	# 		visited.add(state)
+	# 		for symbol in self.alphabet:
+	# 			tmp = [[transition[0],transition[2]] for transition in self.Rules if transition[0]==state and transition[2]==symbol]
+	# 			unvisited |= tmp - visited	

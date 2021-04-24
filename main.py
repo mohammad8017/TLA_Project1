@@ -17,12 +17,12 @@ if __name__ == "__main__":
     print("Enter rules: ")
     for i in range(numOfRules):
         Rules.append(input().split(','))
-    # for i in allStates:
-    #     tmp = [i, i, " "]
-    #     if not tmp in Rules:
-    #         Rules.append(tmp)
+    for i in allStates:
+        tmp = [i, i, " "]
+        if not tmp in Rules:
+            Rules.append(tmp)
+   
 
-     
 
     nfaDiagram = NFAClass(allStates, alphabet, initialState, finalStates, Rules)
 
@@ -38,6 +38,8 @@ if __name__ == "__main__":
     hold = DFAClass()
     hold = tempDfA
     hold.printInfo()
+
+    #print(nfaDiagram.RegExp())
 
 
 

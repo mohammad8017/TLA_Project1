@@ -21,4 +21,20 @@ class DFAClass():
         print("................................")
         print("rules: ", len(self.Rules))
         for i in self.Rules:
-            print(i)    
+            print(i)   
+        print("................................")   
+
+
+    def isAcceptByDFA(self, inputStr):
+        currentState = self.initialState
+
+        for char in inputStr:
+            tmp = []
+            for item in self.Rules: 
+                if item[0] == currentState and item[2] == char: tmp = item
+            currentState = tmp[1]
+
+        if currentState in self.finalStates:
+            return True
+        else:
+            return False              
