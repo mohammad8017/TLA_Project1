@@ -1,5 +1,5 @@
 from DFA import DFAClass
-from graphviz import Graph, render
+from graphviz import Graph, render, Digraph
 #from automata.fa.nfa import NFA
 from PySimpleAutomata import automata_IO
 import networkx as nx
@@ -73,38 +73,41 @@ class NFAClass():
 
 		
 
+
 		
-	def findRegExp(self):
-		# regex = ""
-		# for state in self.allStates:
-		# 	FromCurrentState = [tmp for tmp in self.Rules if tmp[0] == state]
-		# 	toghe = [tmp for tmp in FromCurrentState if tmp[0] == tmp[1]]
 
-		# 	if len(toghe) > 0:
-		# 		regex +='('
-		# 		for i in range(len(toghe)):
-		# 			if i == len(toghe)-1:
-		# 				regex += toghe[i][2]
-		# 			else:
-		# 				regex += toghe[i][2]
-		# 				regex +='+'
-		# 			FromCurrentState.remove(toghe[i])	
-		# 		regex += ")*"
+		
+	# def findRegExp(self):
+	# 	# regex = ""
+	# 	# for state in self.allStates:
+	# 	# 	FromCurrentState = [tmp for tmp in self.Rules if tmp[0] == state]
+	# 	# 	toghe = [tmp for tmp in FromCurrentState if tmp[0] == tmp[1]]
 
-		equations = []
-		for state in self.allStates:
-			FromCurrentState = [tmp for tmp in self.Rules if tmp[0] == state]
-			tmp = "{}=".format(state)
-			for hold in FromCurrentState:
-				tmp += "{}{}+".format(hold[2], hold[1])
-			tmp = list(tmp)	
-			if tmp[-1] == '+':
-				tmp.pop(-1)
-				tmp = str(tmp)
-			if state in self.finalStates:
-				tmp += "+$"     # replace landa with $
+	# 	# 	if len(toghe) > 0:
+	# 	# 		regex +='('
+	# 	# 		for i in range(len(toghe)):
+	# 	# 			if i == len(toghe)-1:
+	# 	# 				regex += toghe[i][2]
+	# 	# 			else:
+	# 	# 				regex += toghe[i][2]
+	# 	# 				regex +='+'
+	# 	# 			FromCurrentState.remove(toghe[i])	
+	# 	# 		regex += ")*"
 
-		print()   
+	# 	equations = []
+	# 	for state in self.allStates:
+	# 		FromCurrentState = [tmp for tmp in self.Rules if tmp[0] == state]
+	# 		tmp = "{}=".format(state)
+	# 		for hold in FromCurrentState:
+	# 			tmp += "{}{}+".format(hold[2], hold[1])
+	# 		tmp = list(tmp)	
+	# 		if tmp[-1] == '+':
+	# 			tmp.pop(-1)
+	# 			tmp = str(tmp)
+	# 		if state in self.finalStates:
+	# 			tmp += "+$"     # replace landa with $
+
+	# 	print()   
 
 	def isAcceptByNFA(self, inputString):
 		holdRules = {}
@@ -112,7 +115,6 @@ class NFAClass():
 			tmp = (rule[0], rule[2])
 			temp2 = rule[1]
 			holdRules.update({tmp:temp2})
-			
 
 		holdAlphabet = set()
 		for alphabet in self.alphabet:
@@ -321,4 +323,96 @@ class NFAClass():
 	# 		visited.add(state)
 	# 		for symbol in self.alphabet:
 	# 			tmp = [[transition[0],transition[2]] for transition in self.Rules if transition[0]==state and transition[2]==symbol]
-	# 			unvisited |= tmp - visited	
+	# 			unvisited |= tmp - visited
+
+	def transition(self,i,j,a):
+		templist=[]
+		templist.append('q'+str(i))
+		templist.append('q'+str(j))
+		templist.append(a)
+
+		if(templist in self.Rules):
+			return True
+		else:
+			return False
+	
+	def Star(self,s):
+		return s+'*'
+
+
+	def findRegExp(self):
+		# Setup the system of equations A and B from Arden's Lemma.
+  		# A represents a state transition table for the given DFA.
+  		# B is a vector of accepting states in the DFA, marked as epsilons
+		A=[[]]
+		B=[]
+		m=len(self.allStates)
+		for i in self.allStates:
+			if i in self.finalStates:
+				B.append('ε')
+			else:
+				B.append('∅')
+		
+		for j in range(1,m):
+			for q in range(1,m):
+				for a in self.alphabet:
+					if(self.transition(j,q,a)==True):
+						A[i][j]=a
+					else:
+						A[i][j]='∅'
+		
+		for n in reversed(range(m,1)):
+			B[n]=(self.Star(A[n][n])+B[n])
+			for x in range(1,n):
+				A[n][j]=(self.Star(A[n][n])+A[n][j])
+
+			for z in range(1,n):
+				B[i]+=(A[i][n]+B[n])
+				for v in range(1,n):
+					A[i][j]+=(A[i][n]+A[n][j])
+
+		return B[1]
+
+
+
+	# def schema(self):
+	# 	gr = Digraph(format='svg')
+	# 	gr.attr('node', shape='point')
+	# 	gr.node('qi')
+	# 	for i in self.allStates:
+	# 		if i in self.finalStates:
+	# 			gr.attr('node', shape='doublecircle', color='green', style='')
+	# 		elif i in self.initialState:
+	# 			gr.attr('node', shape='circle', color='black', style='')
+	# 		else:
+	# 			gr.attr('node', shape='circle', color='black', style='')
+	# 		gr.node(str(i))
+	# 		if i in self.initialState:
+	# 			gr.edge('qi', str(i), 'start')
+
+	# 	temp = []
+	# 	for state in self.allStates:
+	# 		temp.append([item for item in self.allStates if item[0]==state])
+
+	# 	for currentState in temp:
+	# 		for transition in currentState:
+	# 			if transition[2] != ' ':
+	# 				gr.edge(transition[0], transition[1], transition[2])
+
+
+	# 	# for k1, v1 in self.transition_dict.items():
+	# 	# 	for k2, v2 in v1.items():
+	# 	# 		if str(v2) != 'ϕ':
+	# 	# 			gr.edge(str(k1), str(k2), str(v2))
+	# 	gr.body.append(r'label = "\n\n{0}"'.format("Tettt"))
+	# 	gr.render('test_NFA', view=True)
+
+
+
+
+
+
+
+
+			
+

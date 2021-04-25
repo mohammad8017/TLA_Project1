@@ -1,7 +1,7 @@
 from NFA import NFAClass
 from DFA import DFAClass
 from graphviz import Graph
-from automata.fa.nfa import NFA
+# from automata.fa.nfa import NFA
 from PySimpleAutomata import automata_IO
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -17,21 +17,24 @@ if __name__ == "__main__":
     print("Enter rules: ")
     for i in range(numOfRules):
         Rules.append(input().split(','))
-    for i in allStates:
-        tmp = [i, i, " "]
-        if not tmp in Rules:
-            Rules.append(tmp)
-   
+    # for i in allStates:
+    #     tmp = [i, i, " "]
+    #     if not tmp in Rules:
+    #         Rules.append(tmp)
 
+     
 
     nfaDiagram = NFAClass(allStates, alphabet, initialState, finalStates, Rules)
 
-    #nfaDiagram.showSchematicNFA()
+    nfaDiagram.showSchematicNFA()
+    
     
     
     # nfa = NFA()
     checkStr = input("Enter string to check accepted by NFA or not(replace landa with space): ")
-    print(nfaDiagram.isAcceptByNFA(checkStr)) 
+    print(nfaDiagram.isAcceptByNFA(checkStr))
+
+    #nfaDiagram.findRegExp() 
 
 
     tempDfA = nfaDiagram.createEquivalentDFA()
@@ -39,7 +42,7 @@ if __name__ == "__main__":
     hold = tempDfA
     hold.printInfo()
 
-    #print(nfaDiagram.RegExp())
+    # print(nfaDiagram.RegExp())
 
 
 
