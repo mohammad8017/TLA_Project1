@@ -25,8 +25,10 @@ if __name__ == "__main__":
      
 
     nfaDiagram = NFAClass(allStates, alphabet, initialState, finalStates, Rules)
+    dfaDiagram = DFAClass(allStates, alphabet, initialState, finalStates, Rules)
 
     nfaDiagram.showSchematicNFA()
+    dfaDiagram.showSchematicDFA()
     
     
     

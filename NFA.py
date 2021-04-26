@@ -27,87 +27,31 @@ class NFAClass():
 
 
 	def showSchematicNFA(self):
-		holdRules = []
-		dicttest = {}
-		#dicttest.update({('initial',self.initialState):'initial'})
+		nfa = {}
+		holdRules = {}
 		for rule in self.Rules:
-			tmp = (rule[0], rule[1])
-			temp = (rule[0], rule[1])
 			if rule[2] != ' ':
-				temp2 = rule[2]
+				tmp = (rule[0], rule[2])
 			else:
-				temp2 = '$'	
-			dicttest.update({temp:temp2})
-			holdRules.append(tmp)
+				tmp = (rule[0], "λ")	
+			if tmp in holdRules.keys():
+				holdRules[tmp].append(rule[1])	
+			else:	
+				temp2 = [rule[1]]
+				holdRules.update({tmp:temp2})
 
-		G = nx.MultiDiGraph()
-		#temp = {('q0','q1'):'a', ('q0','q2'):'b'}
-		G.add_edges_from(holdRules)
-		G.add_edge('q0','q0')
-		#G.add_edge({('q0','q1'):'a'})
-		#G.add_edges_from(temp)
-		#G.add_edges_from({('a','a'):'2'})
-		colors = []
-		for node in G:
-			if node in self.initialState:
-				colors.append('yellow')
-			elif node in self.finalStates:
-				colors.append('red')
-			else:
-				colors.append('gray')	
-		
-		labels = nx.get_edge_attributes(G, 'weight')
-		labels = dicttest
-		pos = nx.spring_layout(G)
-		nx.draw_networkx_nodes(G, pos, node_size=500, node_color=colors)
-		nx.draw_networkx_edges(G, pos, edgelist=G.edges(), edge_color='black')
-		nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
-		nx.draw_networkx_labels(G, pos)
+		nfa['alphabet'] = set(self.alphabet)
 
-		# nx.draw(G, node_color=colors, with_labels=True)
-		# nx.draw_networkx_edge_labels(G, pos, edge_labels=labels)
-		# nx.draw_networkx_labels(G, pos)
-		plt.title("NFA Diagram")
-		plt.show()	
+		nfa['states'] = set(self.allStates)
 
+		nfa['initial_states']= set([self.initialState])
 
-		
+		nfa['accepting_states'] = set(self.finalStates)
 
+		nfa['transitions'] = holdRules
 
-		
+		automata_IO.nfa_to_dot(nfa, 'NFA_Diagram', '.\\NFA_Schema\\')
 
-		
-	# def findRegExp(self):
-	# 	# regex = ""
-	# 	# for state in self.allStates:
-	# 	# 	FromCurrentState = [tmp for tmp in self.Rules if tmp[0] == state]
-	# 	# 	toghe = [tmp for tmp in FromCurrentState if tmp[0] == tmp[1]]
-
-	# 	# 	if len(toghe) > 0:
-	# 	# 		regex +='('
-	# 	# 		for i in range(len(toghe)):
-	# 	# 			if i == len(toghe)-1:
-	# 	# 				regex += toghe[i][2]
-	# 	# 			else:
-	# 	# 				regex += toghe[i][2]
-	# 	# 				regex +='+'
-	# 	# 			FromCurrentState.remove(toghe[i])	
-	# 	# 		regex += ")*"
-
-	# 	equations = []
-	# 	for state in self.allStates:
-	# 		FromCurrentState = [tmp for tmp in self.Rules if tmp[0] == state]
-	# 		tmp = "{}=".format(state)
-	# 		for hold in FromCurrentState:
-	# 			tmp += "{}{}+".format(hold[2], hold[1])
-	# 		tmp = list(tmp)	
-	# 		if tmp[-1] == '+':
-	# 			tmp.pop(-1)
-	# 			tmp = str(tmp)
-	# 		if state in self.finalStates:
-	# 			tmp += "+$"     # replace landa with $
-
-	# 	print()   
 
 	def isAcceptByNFA(self, inputString):
 		holdRules = {}
@@ -372,41 +316,6 @@ class NFAClass():
 					A[i][j]+=(A[i][n]+A[n][j])
 
 		return B[1]
-
-
-
-	# def schema(self):
-	# 	gr = Digraph(format='svg')
-	# 	gr.attr('node', shape='point')
-	# 	gr.node('qi')
-	# 	for i in self.allStates:
-	# 		if i in self.finalStates:
-	# 			gr.attr('node', shape='doublecircle', color='green', style='')
-	# 		elif i in self.initialState:
-	# 			gr.attr('node', shape='circle', color='black', style='')
-	# 		else:
-	# 			gr.attr('node', shape='circle', color='black', style='')
-	# 		gr.node(str(i))
-	# 		if i in self.initialState:
-	# 			gr.edge('qi', str(i), 'start')
-
-	# 	temp = []
-	# 	for state in self.allStates:
-	# 		temp.append([item for item in self.allStates if item[0]==state])
-
-	# 	for currentState in temp:
-	# 		for transition in currentState:
-	# 			if transition[2] != ' ':
-	# 				gr.edge(transition[0], transition[1], transition[2])
-
-
-	# 	# for k1, v1 in self.transition_dict.items():
-	# 	# 	for k2, v2 in v1.items():
-	# 	# 		if str(v2) != 'ϕ':
-	# 	# 			gr.edge(str(k1), str(k2), str(v2))
-	# 	gr.body.append(r'label = "\n\n{0}"'.format("Tettt"))
-	# 	gr.render('test_NFA', view=True)
-
 
 
 
