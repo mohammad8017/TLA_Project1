@@ -1,4 +1,5 @@
 from PySimpleAutomata import automata_IO
+from pythomata import SimpleDFA
 
 
 
@@ -58,3 +59,22 @@ class DFAClass():
 		dfa['transitions'] = holdRules
 
 		automata_IO.dfa_to_dot(dfa,'DFA_Diagram' , '.\\DFA_Schema\\')
+
+
+	def makeSimpleDFA(self):
+		tempAlphabet = set(self.alphabet)
+		tempAllStates = set(self.allStates)
+		tempInitialState = self.initialState
+		tempFinalStates = set(self.finalStates)
+		tempRules = dict()
+		for currState in self.allStates:
+			allRules = [tmp for tmp in self.Rules if tmp[0] == currState]
+			tempDict = {allRules[0][2]:allRules[0][1], allRules[1][2]:allRules[1][1]}
+			#tempRules.add({currState:tempDict})
+			tempRules[currState] = tempDict
+
+		dfa = SimpleDFA(tempAllStates, tempAlphabet, tempInitialState, tempFinalStates, tempRules)
+		#dfa_minimize = dfa.minimize()
+		graph = dfa.minimize().trim().to_graphviz()	
+		graph.render("Simple DFA")
+		#print()	

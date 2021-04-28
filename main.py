@@ -7,6 +7,41 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
+    # print("NFA input :")
+    # print("-------------------")
+    # allStates = input("Enter states of Finite Automata: ").split(',')
+    # finalStates = input("Enter final states of Finite Automata: ").split(',')
+    # alphabet = input("Enter alphabet of Finite Automata: ").split(',')
+    # initialState = allStates[0]
+    # numOfRules = int(input("Enter number of rules: "))
+
+    # Rules = []
+    # print("Enter rules: ")
+    # for i in range(numOfRules):
+    #     Rules.append(input().split(','))
+
+     
+
+    # nfaDiagram = NFAClass(allStates, alphabet, initialState, finalStates, Rules)
+    # nfaDiagram.showSchematicNFA()
+        
+    
+    # checkStr = input("Enter string to check accepted by NFA or not(replace landa with space): ")
+    # print(nfaDiagram.isAcceptByNFA(checkStr))
+
+    # #nfaDiagram.findRegExp() 
+
+    # tempDfA = nfaDiagram.createEquivalentDFA()
+    # hold = DFAClass()
+    # hold = tempDfA
+    # hold.printInfo()
+
+
+
+
+
+    print("DFA input :")
+    print("-------------------")
     allStates = input("Enter states of Finite Automata: ").split(',')
     finalStates = input("Enter final states of Finite Automata: ").split(',')
     alphabet = input("Enter alphabet of Finite Automata: ").split(',')
@@ -17,34 +52,13 @@ if __name__ == "__main__":
     print("Enter rules: ")
     for i in range(numOfRules):
         Rules.append(input().split(','))
-    # for i in allStates:
-    #     tmp = [i, i, " "]
-    #     if not tmp in Rules:
-    #         Rules.append(tmp)
 
-     
-
-    nfaDiagram = NFAClass(allStates, alphabet, initialState, finalStates, Rules)
     dfaDiagram = DFAClass(allStates, alphabet, initialState, finalStates, Rules)
+    dfaDiagram.showSchematicDFA()   
 
-    nfaDiagram.showSchematicNFA()
-    dfaDiagram.showSchematicDFA()
+    dfaDiagram.makeSimpleDFA() 
+
     
-    
-    
-    # nfa = NFA()
-    checkStr = input("Enter string to check accepted by NFA or not(replace landa with space): ")
-    print(nfaDiagram.isAcceptByNFA(checkStr))
-
-    #nfaDiagram.findRegExp() 
-
-
-    tempDfA = nfaDiagram.createEquivalentDFA()
-    hold = DFAClass()
-    hold = tempDfA
-    hold.printInfo()
-
-    # print(nfaDiagram.RegExp())
 
 
 
