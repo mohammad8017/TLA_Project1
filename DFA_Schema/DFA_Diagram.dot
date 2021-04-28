@@ -1,8 +1,8 @@
 digraph {
 	fake [style=invisible]
+	q2 [shape=doublecircle]
 	q1 [shape=doublecircle]
 	q3
-	q2 [shape=doublecircle]
 	q0 [root=true]
 	fake -> q0 [style=bold]
 	q0 -> q0 [label=b]
