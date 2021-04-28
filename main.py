@@ -1,40 +1,41 @@
 from NFA import NFAClass
 from DFA import DFAClass
 from graphviz import Graph
-# from automata.fa.nfa import NFA
 from PySimpleAutomata import automata_IO
 import networkx as nx
 import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
-    # print("NFA input :")
-    # print("-------------------")
-    # allStates = input("Enter states of Finite Automata: ").split(',')
-    # finalStates = input("Enter final states of Finite Automata: ").split(',')
-    # alphabet = input("Enter alphabet of Finite Automata: ").split(',')
-    # initialState = allStates[0]
-    # numOfRules = int(input("Enter number of rules: "))
+    print("NFA input :")
+    print("-------------------")
+    allStates = input("Enter states of Finite Automata: ").split(',')
+    finalStates = input("Enter final states of Finite Automata: ").split(',')
+    alphabet = input("Enter alphabet of Finite Automata: ").split(',')
+    initialState = allStates[0]
+    numOfRules = int(input("Enter number of rules: "))
 
-    # Rules = []
-    # print("Enter rules: ")
-    # for i in range(numOfRules):
-    #     Rules.append(input().split(','))
+    Rules = []
+    print("Enter rules: ")
+    for i in range(numOfRules):
+        Rules.append(input().split(','))
 
      
 
-    # nfaDiagram = NFAClass(allStates, alphabet, initialState, finalStates, Rules)
-    # nfaDiagram.showSchematicNFA()
+    nfaDiagram = NFAClass(allStates, alphabet, initialState, finalStates, Rules)
+    nfaDiagram.showSchematicNFA()
         
     
-    # checkStr = input("Enter string to check accepted by NFA or not(replace landa with space): ")
-    # print(nfaDiagram.isAcceptByNFA(checkStr))
+    checkStr = input("Enter string to check accepted by NFA or not(replace landa with space): ")
+    print(nfaDiagram.isAcceptByNFA(checkStr))
 
-    # #nfaDiagram.findRegExp() 
+    #nfaDiagram.findRegExp() 
 
-    # tempDfA = nfaDiagram.createEquivalentDFA()
-    # hold = DFAClass()
-    # hold = tempDfA
-    # hold.printInfo()
+    tempDfA = nfaDiagram.createEquivalentDFA()
+    hold = DFAClass()
+    hold = tempDfA
+    print("Equivalent DFA:")
+    hold.printInfo()
+    print("========================================================")
 
 
 
@@ -57,6 +58,10 @@ if __name__ == "__main__":
     dfaDiagram.showSchematicDFA()   
 
     dfaDiagram.makeSimpleDFA() 
+
+    checkStr = input("Enter string to check accepted by DFA or not(replace landa with space): ")
+    print(dfaDiagram.isAcceptByDFA(checkStr))
+    
 
     
 
